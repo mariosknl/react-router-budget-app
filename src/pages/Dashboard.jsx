@@ -1,5 +1,5 @@
 // rrd imports
-import { useLoaderData } from "react-router-dom";
+import { Link, useLoaderData } from "react-router-dom";
 
 // library imports
 import { toast } from "react-toastify";
@@ -7,12 +7,12 @@ import { toast } from "react-toastify";
 // components
 import Intro from "../components/Intro";
 import AddBudgetForm from "../components/AddBudgetForm";
-
-//  helper functions
-import { createBudget, createExpense, fetchData, waait } from "../helpers";
 import AddExpenseForm from "../components/AddExpenseForm";
 import BudgetItem from "../components/BudgetItem";
 import Table from "../components/Table";
+
+//  helper functions
+import { createBudget, createExpense, fetchData, waait } from "../helpers";
 
 // loader
 export function dashboardLoader() {
@@ -60,7 +60,7 @@ export async function dashboardAction({ request }) {
 			});
 			return toast.success(`Expense ${values.newExpense} created!`);
 		} catch (e) {
-			throw new Error("There was a problem creating your budget.");
+			throw new Error("There was a problem creating your expense.");
 		}
 	}
 }
@@ -92,10 +92,15 @@ const Dashboard = () => {
 									<div className="grid-md">
 										<h2>Recent Expenses</h2>
 										<Table
-											expenses={expenses.sort(
-												(a, b) => b.createdAt - a.createdAt
-											)}
+											expenses={expenses
+												.sort((a, b) => b.createdAt - a.createdAt)
+												.slice(0, 8)}
 										/>
+										{expenses.length > 8 && (
+											<Link to="expenses" className="btn btn--dark">
+												View all expenses
+											</Link>
+										)}
 									</div>
 								)}
 							</div>
